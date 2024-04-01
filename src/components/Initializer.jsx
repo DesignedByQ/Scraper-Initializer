@@ -1,29 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from "react";
+//import { v4 as uuidv4 } from 'uuid';
+import TableComponent from "./TableComponent";
 
-const Initializer = () => {
+const Initializer = ({data}) => {
+
+    //console.log(data)
 
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [isLoadingGetAll, setIsLoadingGetAll] = useState(false);
+    const [isErrorGetAll, setIsErrorGetAll] = useState(false);
+    const [isLoadingGetData, setIsLoadingGetData] = useState(false);
+    const [isErrorGetData, setIsErrorGetData] = useState(false);
 
-    const generateUUID = () => {
-        return uuidv4()
-    }
+    // const generateUUID = () => {
+    //     return uuidv4()
+    // }
+
+    const [dataFromDB, setDataFromDB] = useState([]);
 
     const [base64Images, setBase64Images] = useState([]);
 
     const [allExistingBase64Images, setAllExistingBase64Images] = useState([]);
 
-    //test links
-    //may have to prepend https:// to all urls
-    const webpForFootwear = ["https://images.asos-media.com/products/bershka-baggy-carpenter-casted-jean-in-green/206170024-1-green", "https://images.asos-media.com/products/asos-design-oversized-heavyweight-t-shirt-in-washed-khaki-with-chest-print/205462648-1-mermaid"]
-    const webpForAccessories = ["https://images.asos-media.com/products/asos-design-oversized-embroidery-bomber-jacket-in-khaki/205494564-1-khaki", "https://images.asos-media.com/products/parlez-nylon-rain-jacket-in-burnt-orange/205792473-1-red"]
-    const webpForCoatsandjackets = ["https://images.asos-media.com/products/parlez-nylon-rain-jacket-in-burnt-orange/205792473-1-red", "https://images.asos-media.com/products/bershka-baggy-carpenter-casted-jean-in-green/206170024-1-green"]
+    //Arrays to separate categories from csv data
+    const webpForFootwear = []
+    const webpForAccessories = []
+    const webpForCoatsandjackets = []
 
     const getURLs = [webpForFootwear, webpForAccessories, webpForCoatsandjackets];
-    
-    
 
     const [fetchedImageData, setFetchedImageData] = useState({
 
@@ -46,7 +52,20 @@ const Initializer = () => {
     });
 
     const handleFileChange = async () => {
-        
+
+        for(let i = 0; i < data.length; i++){
+            if(data[i]["ProductType"] === "footwear"){
+                webpForFootwear.push(`https://${data[i]["ImageURL"]}`)
+            } else if(data[i]["ProductType"] === "accessories"){
+                webpForAccessories.push(`https://${data[i]["ImageURL"]}`);
+            } else if(data[i]["ProductType"] === "coatsandjackets"){
+                webpForCoatsandjackets.push(`https://${data[i]["ImageURL"]}`)
+            } else {
+                console.log(`${data[i]["ID"]} was not assigned a product type.`)
+            }
+        }
+        console.log(webpForAccessories)
+        console.log(data)
         // try {
            
         //     const response = await fetch('', {
@@ -80,7 +99,7 @@ const Initializer = () => {
 
         //this will go in the else and be set using the response data - should be in blob format convert from webp to blob in last job
 
-        // Function to fetch image data from URLs, convert to blobs and push into arrays
+        // Function to fetch image data from URLs in csv file, convert to blobs and push into arrays
         const fetchAndPushBlobs = async (urls, blobArray) => {
             for (let i = 0; i < urls.length; i++) {
                 const url = urls[i];
@@ -145,9 +164,16 @@ const Initializer = () => {
         // console.log('Array 2:', array2);
         // console.log('Array 3:', array3);
 
-        fetchedImageData.base64DTO.eventID = 'set from response object'
-        fetchedImageData.base64DTO.date = '2024-03-20T13:04:59.783Z' //'set from response object'
-        fetchedImageData.base64DTO.supplier = 'set from response object'
+        fetchedImageData.base64DTO.eventID = data[1]["EventID"] ? data[1]["EventID"] : "Event ID was null"
+
+        // Convert the date string to a Date object
+        const dateObject = new Date(data[1]["DateTime"]);
+
+        // Format the date string
+        const formattedDate = dateObject.toISOString();
+
+        fetchedImageData.base64DTO.date = formattedDate
+        fetchedImageData.base64DTO.supplier = data[1]["Supplier"] ? data[1]["Supplier"] : "Supplier was null"
         fetchedImageData.base64DTO.imageType = blob1[0].type
         fetchedImageData.base64DTO.imageData.footwearURLs = blob1
         fetchedImageData.base64DTO.imageData.accessoriesURLs = blob2
@@ -203,7 +229,7 @@ const Initializer = () => {
 
     }
 
-    const getScrapingURLs = ``
+    //const getScrapingURLs = ``
 
     const persistURLs = `http://localhost:9100/imagehost/persistimagedata` 
     //const persistURLs = `https://image-host-je09.onrender.com/imagehost/persistimagedata`
@@ -215,8 +241,6 @@ const Initializer = () => {
 
         setIsLoading(true);
         setIsError(false);
-     
-        //get request is requeired to fetch the scraping data
 
         try {
 
@@ -288,7 +312,7 @@ const Initializer = () => {
               
             } else {
 
-                const data = response.toString();
+                const data = response.json();
                 console.log(data)
                 console.log(response.status)  
 
@@ -313,13 +337,14 @@ const Initializer = () => {
     }
 
     const getAllImages = `http://localhost:9100/imagehost/getallimages`
+    //const getAllImages = `https://image-host-je09.onrender.com/imagehost/getallimages`
    
     const displayAllImages = async (event) => {
 
         event.preventDefault()
 
-        setIsLoading(true);
-        setIsError(false);
+        setIsLoadingGetAll(true);
+        setIsErrorGetAll(false);
 
         try {
 
@@ -334,7 +359,7 @@ const Initializer = () => {
 
             if(!response.ok){
 
-                setIsError(true);
+                setIsErrorGetAll(true);
 
             } else {
 
@@ -346,13 +371,51 @@ const Initializer = () => {
 
         } catch(error){
 
-            setIsError(true);
+            setIsErrorGetAll(true);
             console.log(error);
 
         }
 
-        setIsLoading(false); 
+        setIsLoadingGetAll(false); 
     
+    }
+    
+    const getAllData = `http://localhost:9100/imagehost/getallentries`
+    //const getAllData = `https://image-host-je09.onrender.com/imagehost/getallentries`
+
+    const getDBData = async (event) => {
+
+        event.preventDefault()
+
+        setIsLoadingGetData(true)
+        setIsErrorGetData(false)
+
+        try {
+
+            const response = await fetch(getAllData,{
+
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Origin': 'http://localhost:3000'
+                }
+
+            });
+
+            if(!response.ok){
+                setIsErrorGetData(true)
+            } else {
+                const data = await response.json()
+                console.log(data)
+                setDataFromDB(data)
+            }
+
+        } catch(error){
+            setIsErrorGetData(true)
+            console.log(error)
+        }
+
+        setIsLoadingGetData(false)
+
     }
 
 
@@ -368,26 +431,39 @@ const Initializer = () => {
                 {isError && <div>Error getting or posting images</div>}
                 <button type="submit" onClick={handleSubmit}>Post Content</button>
                 <h2>Images that were posted to instagram</h2>
-                {base64Images.map((base64, index) => (
-                <img key={index} src={base64} alt={`Converted Image ${index + 1}`} />
-                ))}
-            </div>
-
-            <div>
-                {isLoading && <div>Loading...</div>}
-                {isError && <div>Error fetching images</div>}
-                <button type="submit" onClick={displayAllImages}>Get All Images</button>
-                <h2>Images that exist in the database</h2>
                 <div  style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'  }}>
-                    {allExistingBase64Images.map((base64String, index) => (
-                        <div key={index} >
-                            <img src={`data:image/jpeg;base64,${base64String}`} alt={`Image ${index}`} style={{ width: '50%' }}/>
+                    {base64Images.map((base64, index) => (
+                        <div key={index}>
+                            <img src={base64} alt={`Converted Image ${index + 1}`} style={{ width: '50px' }}/>
                         </div>
                     ))}
                 </div>
             </div>
 
-            
+            <div>
+                {isLoadingGetAll && <div>Loading...</div>}
+                {isErrorGetAll && <div>Error fetching images</div>}
+                <button type="submit" onClick={displayAllImages}>Get All Images</button>
+                <h2>Images that exist in the database</h2>
+                <div  style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'  }}>
+                    {allExistingBase64Images.map((base64String, index) => (
+                        <div key={index} >
+                            <img src={`data:image/jpeg;base64,${base64String}`} alt={`Image ${index}`} style={{ width: '50px' }}/>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div>
+                {isLoadingGetData && <div>Loading...</div>}
+                {isErrorGetData && <div>Error fetching DB Data</div>}
+                <button type="submit" onClick={getDBData}>Get DB Data</button>
+                <div>
+                    <h2>All data in the database</h2>
+                    <TableComponent data={dataFromDB} />
+                </div>
+
+            </div>
 
         </div>
   
