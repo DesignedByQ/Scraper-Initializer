@@ -26,7 +26,7 @@ const Initializer = ({data}) => {
 
     //Arrays to separate categories from csv data
     const webpForFootwear = []
-    const webpForAccessories = []
+    const webpForAccessories = ["https://images.asos-media.com/products/asos-design-smart-leather-belt-with-burnished-silver-buckle-in-black/203859525-1-black"]
     const webpForCoatsandjackets = []
 
     const getURLs = [webpForFootwear, webpForAccessories, webpForCoatsandjackets];
@@ -44,7 +44,10 @@ const Initializer = ({data}) => {
                 accessoriesURLs: [],
                 accessories64s: [],
                 coatsandjacketsURLs: [],
-                coatsandjackets64s: []
+                coatsandjackets64s: [],
+                footwearCaptions: [], 
+                accessoriesCaptions: ["ASOS DESIGN extreme oversized leather look wrap jacket in black"], 
+                coatsandjacketsCaptions: []   
             }
 
         }
@@ -53,53 +56,25 @@ const Initializer = ({data}) => {
 
     const handleFileChange = async () => {
 
+        //Fetch URLs and product descriptions from csv file and add to separate category arrays
         for(let i = 0; i < data.length; i++){
             if(data[i]["ProductType"] === "footwear"){
-                webpForFootwear.push(`https://${data[i]["ImageURL"]}`)
+                //webpForFootwear.push(`https://${data[i]["ImageURL"]}`)
+                //fetchedImageData.base64DTO.imageData.footwearCaptions.push(`https://${data[i]["Name"]}`)
             } else if(data[i]["ProductType"] === "accessories"){
-                webpForAccessories.push(`https://${data[i]["ImageURL"]}`);
+                //webpForAccessories.push(`https://${data[i]["ImageURL"]}`);
+                //fetchedImageData.base64DTO.imageData.accessoriesCaptions.push(`https://${data[i]["Name"]}`)
             } else if(data[i]["ProductType"] === "coatsandjackets"){
-                webpForCoatsandjackets.push(`https://${data[i]["ImageURL"]}`)
+                //webpForCoatsandjackets.push(`https://${data[i]["ImageURL"]}`)
+                //fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions.push(`https://${data[i]["Name"]}`)
             } else {
                 console.log(`${data[i]["ID"]} was not assigned a product type.`)
             }
         }
         console.log(webpForAccessories)
         console.log(data)
-        // try {
-           
-        //     const response = await fetch('', {
 
-        //         method: 'GET',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-              
-        //     });
-    
-        //     if (!response.ok) {
-              
-        //       setIsError(true);
-              
-        //     } else {
-
-        //         getURLs = response.json()
-        //         console.log(getURLs)
-
-        //     }
-
-        // } catch (error) {
-
-        //     setIsError(true);
-        //     console.log(error);
-
-        // }
-
-        // setIsLoading(false);
-
-        //this will go in the else and be set using the response data - should be in blob format convert from webp to blob in last job
-
-        // Function to fetch image data from URLs in csv file, convert to blobs and push into arrays
+        // Function to convert URLs to blobs and push into arrays
         const fetchAndPushBlobs = async (urls, blobArray) => {
             for (let i = 0; i < urls.length; i++) {
                 const url = urls[i];
@@ -137,33 +112,7 @@ const Initializer = ({data}) => {
         console.log(blob2)
         console.log(blob3)
 
-        // // Function to convert Blob to array
-        // const blobToArray = async (blob) => {
-        //     return new Promise((resolve, reject) => {
-        //         const reader = new FileReader();
-
-        //         reader.onload = () => {
-        //             const array = new Uint8Array(reader.result);
-        //             resolve(Array.from(array));
-        //         };
-
-        //         reader.onerror = () => {
-        //             reject(new Error('Failed to read the blob as an array'));
-        //         };
-
-        //         reader.readAsArrayBuffer(blob);
-        //     });
-        // };
-
-        // // Convert blobs to arrays
-        // const array1 = await Promise.all(blob1.map(blob => blobToArray(blob)));
-        // const array2 = await Promise.all(blob2.map(blob => blobToArray(blob)));
-        // const array3 = await Promise.all(blob3.map(blob => blobToArray(blob)));
-
-        // console.log('Array 1:', array1);
-        // console.log('Array 2:', array2);
-        // console.log('Array 3:', array3);
-
+        //Set fetchedImageData object with event data and blob arrays
         fetchedImageData.base64DTO.eventID = data[1]["EventID"] ? data[1]["EventID"] : "Event ID was null"
 
         // Convert the date string to a Date object
@@ -174,7 +123,7 @@ const Initializer = ({data}) => {
 
         fetchedImageData.base64DTO.date = formattedDate
         fetchedImageData.base64DTO.supplier = data[1]["Supplier"] ? data[1]["Supplier"] : "Supplier was null"
-        fetchedImageData.base64DTO.imageType = blob1[0].type
+        fetchedImageData.base64DTO.imageType = blob1[0]?.type ? blob1[0].type : "Image type was null"
         fetchedImageData.base64DTO.imageData.footwearURLs = blob1
         fetchedImageData.base64DTO.imageData.accessoriesURLs = blob2
         fetchedImageData.base64DTO.imageData.coatsandjacketsURLs = blob3
@@ -229,8 +178,6 @@ const Initializer = ({data}) => {
 
     }
 
-    //const getScrapingURLs = ``
-
     const persistURLs = `http://localhost:9100/imagehost/persistimagedata` 
     //const persistURLs = `https://image-host-je09.onrender.com/imagehost/persistimagedata`
 
@@ -248,7 +195,7 @@ const Initializer = ({data}) => {
 
             const footwear64s = fetchedImageData.base64DTO.imageData.footwear64s;
 
-            // Iterate through the array and process each item
+            // Iterate through the array and process each item - remove initial part of base64
             const footwearStringList = footwear64s.map(item => {
               // Split the item by ',' and take the last part
               const base64ImageData = item.split(',').pop();
@@ -278,6 +225,10 @@ const Initializer = ({data}) => {
             console.log(accessoriesStringList.length)
             console.log(coatsandjacketsStringList.length)
 
+            // console.log(fetchedImageData.base64DTO.imageData.footwearCaptions)
+            // console.log(fetchedImageData.base64DTO.imageData.accessoriesCaptions)
+            // console.log(fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions)
+
             const collectionOfImagesAndEventData = {
 
                 eventID: fetchedImageData.base64DTO.eventID,
@@ -286,7 +237,10 @@ const Initializer = ({data}) => {
                 imageType: fetchedImageData.base64DTO.imageType,
                 footwear64s: footwearStringList,
                 accessories64s: accessoriesStringList,
-                coatsandjackets64s: coatsandjacketsStringList
+                coatsandjackets64s: coatsandjacketsStringList,
+                footwearCaptions: fetchedImageData.base64DTO.imageData.footwearCaptions,
+                accessoriesCaptions: fetchedImageData.base64DTO.imageData.accessoriesCaptions,
+                coatsandjacketsCaptions: fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions
 
             }
 
