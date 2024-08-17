@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 //import { v4 as uuidv4 } from 'uuid';
 import TableComponent from "./TableComponent";
 
@@ -6,13 +6,15 @@ const Initializer = ({data}) => {
 
     //console.log(data)
 
-    const [errors, setErrors] = useState({});
+    //const [error, setError] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [isLoadingGetAll, setIsLoadingGetAll] = useState(false);
     const [isErrorGetAll, setIsErrorGetAll] = useState(false);
     const [isLoadingGetData, setIsLoadingGetData] = useState(false);
     const [isErrorGetData, setIsErrorGetData] = useState(false);
+    // let shortUrl = "";
+    let [longUrl, setLongUrl] = useState('');
 
     // const generateUUID = () => {
     //     return uuidv4()
@@ -26,7 +28,7 @@ const Initializer = ({data}) => {
 
     //Arrays to separate categories from csv data
     const webpForFootwear = []
-    const webpForAccessories = ["https://images.asos-media.com/products/asos-design-smart-leather-belt-with-burnished-silver-buckle-in-black/203859525-1-black"]
+    const webpForAccessories = []
     const webpForCoatsandjackets = []
 
     const getURLs = [webpForFootwear, webpForAccessories, webpForCoatsandjackets];
@@ -46,27 +48,107 @@ const Initializer = ({data}) => {
                 coatsandjacketsURLs: [],
                 coatsandjackets64s: [],
                 footwearCaptions: [], 
-                accessoriesCaptions: ["ASOS DESIGN extreme oversized leather look wrap jacket in black"], 
-                coatsandjacketsCaptions: []   
+                accessoriesCaptions: [], 
+                coatsandjacketsCaptions: [],
+                productFootwearURLs: [],
+                productAccessoriesURLs: [],
+                productCoatsAndJacketsURLs: []   
             }
+            
 
         }
 
     });
+
+    // Function to convert the URL
+    const convertUrl = (originalUrl) => {
+        // Split the original URL by '/'
+        const parts = originalUrl.split('/');
+
+        // Remove the first three elements ('asos-design', 'asos-design', 'asos-design-oversized-faux-leather-motocross-jacket-in-monochrome')
+        const newPath = parts.slice(1).join('/');
+
+        // Construct the new URL
+        const newUrl = `asos.com/${newPath}`;
+
+        return newUrl;
+    }
+
+    // const shortenUrlWithTinyUrl = async () => {
+
+    //     const token = "jpmceHAtOayQ2nl4umuaPH6SEO70wLPWqfOiSXcRCLIBCmab9cJJkZaX2GzS"
+
+    //     try {
+
+    //         const encodedUrl = encodeURIComponent(longUrl);
+    //         //const response = await axios(`https://tinyurl.com/api-create.php?url=${encodedUrl}`);   
+    //         // const response = await axios.post('https://tinyurl.com/openapi/v2.json/create', {
+    //         //     params: {
+    //         //         url: longUrl,
+    //         //         domain: "tinyurl.com",
+    //         //         alias: "myexamplelink",
+    //         //         tags: "example,link",
+    //         //         expires_at: "2024-10-25 10:11:12",
+    //         //         description: "string"
+    //         //       },
+    //         //   });  
+    //         const response = await axios.patch(
+    //             'https://api.tinyurl.com/change',
+    //             {
+    //               url: longUrl,
+    //               domain: 'tinyurl.com',
+    //               alias: 'example-alias' // You can set an alias if needed, or remove this line
+    //             },
+    //             {
+    //               headers: {
+    //                 'accept': 'application/json',
+    //                 'Content-Type': 'application/json',
+    //                 'Authentication': `jpmceHAtOayQ2nl4umuaPH6SEO70wLPWqfOiSXcRCLIBCmab9cJJkZaX2GzS`, 
+    //                 'Access-Control-Allow-Origin': 'http://localhost:3000'
+    //               }
+    //             }
+    //           );
+            
+
+              
+            
+    //         console.log(response.status)
+    //         if (response.status === 200) {
+    //             shortUrl = response.data;
+    //             setError('');
+    //             console.log(shortUrl)
+    //         } else {
+    //             setError(`Error: ${response.status}`);
+    //             console.log(error)
+    //         }
+            
+    //     } catch (error) {
+    //       setError(`Error: ${error.message}`);
+    //       console.log(error)
+    //     }
+    // };
 
     const handleFileChange = async () => {
 
         //Fetch URLs and product descriptions from csv file and add to separate category arrays
         for(let i = 0; i < data.length; i++){
             if(data[i]["ProductType"] === "footwear"){
-                //webpForFootwear.push(`https://${data[i]["ImageURL"]}`)
-                //fetchedImageData.base64DTO.imageData.footwearCaptions.push(`https://${data[i]["Name"]}`)
+                webpForFootwear.push(`https://${data[i]["ImageURL"]}`)
+                fetchedImageData.base64DTO.imageData.footwearCaptions.push(`${data[i]["Name"]}`)
+                fetchedImageData.base64DTO.imageData.productFootwearURLs.push(convertUrl(data[i]["ProductURL"]))
             } else if(data[i]["ProductType"] === "accessories"){
-                //webpForAccessories.push(`https://${data[i]["ImageURL"]}`);
-                //fetchedImageData.base64DTO.imageData.accessoriesCaptions.push(`https://${data[i]["Name"]}`)
+                webpForAccessories.push(`https://${data[i]["ImageURL"]}`);
+                fetchedImageData.base64DTO.imageData.accessoriesCaptions.push(`${data[i]["Name"]}`)
+                fetchedImageData.base64DTO.imageData.productAccessoriesURLs.push(convertUrl(data[i]["ProductURL"]))
+                //longUrl = convertUrl("https://www.asos.com/asos-design/asos-design-wide-chino-shorts-in-shorter-length-in-tan/prd/204458642?ctaref=featured+product&featureref1=featured+product&#colourWayId-204458644")//longUrl = data[i]["ProductURL"]
+                //console.log(longUrl)
+                //shortenUrlWithTinyUrl();
+                //console.log(shortUrl)
+                //fetchedImageData.base64DTO.imageData.productAccessoriesURLs.push(longUrl)
             } else if(data[i]["ProductType"] === "coatsandjackets"){
-                //webpForCoatsandjackets.push(`https://${data[i]["ImageURL"]}`)
-                //fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions.push(`https://${data[i]["Name"]}`)
+                webpForCoatsandjackets.push(`https://${data[i]["ImageURL"]}`)
+                fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions.push(`${data[i]["Name"]}`)
+                fetchedImageData.base64DTO.imageData.productCoatsAndJacketsURLs.push(convertUrl(data[i]["ProductURL"]))
             } else {
                 console.log(`${data[i]["ID"]} was not assigned a product type.`)
             }
@@ -178,10 +260,11 @@ const Initializer = ({data}) => {
 
     }
 
-    const persistURLs = `http://localhost:9100/imagehost/persistimagedata` 
+    //const persistURLs = `http://localhost:9100/imagehost/persistimagedata` 
     //const persistURLs = `https://image-host-je09.onrender.com/imagehost/persistimagedata`
+    const persistURLs = `https://kingmakerimageserver.onrender.com/imagehost/persistimagedata`
 
-    //Only sends base64s not URLs
+    //Only sends base64s not imageURLs
     const handleSubmit = async (event) => {
 
         event.preventDefault();
@@ -240,7 +323,10 @@ const Initializer = ({data}) => {
                 coatsandjackets64s: coatsandjacketsStringList,
                 footwearCaptions: fetchedImageData.base64DTO.imageData.footwearCaptions,
                 accessoriesCaptions: fetchedImageData.base64DTO.imageData.accessoriesCaptions,
-                coatsandjacketsCaptions: fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions
+                coatsandjacketsCaptions: fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions,
+                productFootwearURLs: fetchedImageData.base64DTO.imageData.productFootwearURLs,
+                productAccessoriesURLs: fetchedImageData.base64DTO.imageData.productAccessoriesURLs,
+                productCoatsAndJacketsURLs: fetchedImageData.base64DTO.imageData.productCoatsAndJacketsURLs
 
             }
 
@@ -251,7 +337,7 @@ const Initializer = ({data}) => {
 
                 method: 'POST',
                 headers: {
-    
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
                     'Content-Type': 'application/json',
     
                 },
@@ -272,11 +358,10 @@ const Initializer = ({data}) => {
 
             }
 
-
         } catch (error) {
 
-                setIsError(true);
-                console.log(error);
+            setIsError(true);
+            console.log(error);
     
         }
     
@@ -290,8 +375,8 @@ const Initializer = ({data}) => {
 
     }
 
-    const getAllImages = `http://localhost:9100/imagehost/getallimages`
-    //const getAllImages = `https://image-host-je09.onrender.com/imagehost/getallimages`
+    //const getAllImages = `http://localhost:9100/imagehost/getallimages`
+    const getAllImages = `https://image-host-je09.onrender.com/imagehost/getallimages`
    
     const displayAllImages = async (event) => {
 
@@ -334,8 +419,8 @@ const Initializer = ({data}) => {
     
     }
     
-    const getAllData = `http://localhost:9100/imagehost/getallentries`
-    //const getAllData = `https://image-host-je09.onrender.com/imagehost/getallentries`
+    //const getAllData = `http://localhost:9100/imagehost/getallentries`
+    const getAllData = `https://image-host-je09.onrender.com/imagehost/getallentries`
 
     const getDBData = async (event) => {
 
@@ -372,12 +457,107 @@ const Initializer = ({data}) => {
 
     }
 
+    //const triggerURL = `http://localhost:9100/imagehost/selfservice`
+    const triggerURL = `https://kingmakerimageserver.onrender.com/imagehost/receiveorderedimages`
+
+    // Arrays to store timeout and interval IDs
+    let timeoutIds = [];
+    let intervalIds = [];
+
+    // Function to calculate the delay until the next trigger time
+    function getNextTriggerDelay(hours, minutes) {
+        const now = new Date();
+        const nextTrigger = new Date();
+        
+        nextTrigger.setHours(hours);
+        nextTrigger.setMinutes(minutes);
+        nextTrigger.setSeconds(0);
+        nextTrigger.setMilliseconds(0);
+
+        // If the next trigger time is in the past, set it for tomorrow
+        if (nextTrigger <= now) {
+            nextTrigger.setDate(nextTrigger.getDate() + 1);
+        }
+
+        return nextTrigger - now;
+    }
+
+    // Function to schedule the trigger at specific times
+    function scheduleTriggers() {
+        const triggerTimes = [
+            { hours: 8, minutes: 0 },  // 8:00 AM
+            { hours: 16, minutes: 0 }, // 4:00 PM
+            { hours: 0, minutes: 0 }   // 12:00 AM
+        ];
+
+        triggerTimes.forEach(time => {
+            const delay = getNextTriggerDelay(time.hours, time.minutes);
+            const timeoutId = setTimeout(() => {
+                triggerPosting();
+
+                // Schedule subsequent triggers using setInterval
+                const intervalId = setInterval(triggerPosting, 24 * 60 * 60 * 1000); // 24 hours
+                intervalIds.push(intervalId);
+            }, delay);
+
+            // Store the timeout ID
+            timeoutIds.push(timeoutId);
+        });
+    }
+
+    // Function to stop all scheduled postings
+    function endScheduling() {
+        // Clear all timeouts
+        timeoutIds.forEach(id => clearTimeout(id));
+        timeoutIds = []; // Clear the array
+
+        // Clear all intervals
+        intervalIds.forEach(id => clearInterval(id));
+        intervalIds = []; // Clear the array
+
+        console.log('All scheduled postings have been stopped.');
+    }
+
+    // Function that performs the posting
+    const triggerPosting = async () => {
+        try {
+            const response = await fetch(triggerURL, {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': 'http://localhost:3000' // This header is not necessary in the request
+                },
+                body: null
+            });
+
+            if (!response.ok) {
+                // Stop the scheduling if a non-2xx HTTP response is received
+                endScheduling();
+
+                // Handle non-2xx HTTP responses
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            const data = await response.text();
+            console.log(data);
+
+        } catch (error) {
+            console.error('Error occurred while triggering posting:', error);
+        }
+    };
+
+    // Start scheduling on startup
+    scheduleTriggers();
 
     return(
 
         <div> 
             
             <h1>User Interface</h1>
+
+            <div>
+                <button type="submit" onClick={triggerPosting}>Self Service Trigger</button>
+            </div>
             
             {/* Display converted images */}
             <div>

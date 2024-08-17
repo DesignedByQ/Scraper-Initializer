@@ -126,6 +126,7 @@ const Scraper = () => {
                         <th>DateTime</th>
                         <th>EventID</th>
                         <th>Supplier</th>
+                        <th>ProductURL</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -139,6 +140,7 @@ const Scraper = () => {
                             <td>{row.DateTime}</td>
                             <td>{row.EventID}</td>
                             <td>{row.Supplier}</td>
+                            <td>{row.ProductURL}</td>
                         </tr>
                     ))}
                 </tbody>
