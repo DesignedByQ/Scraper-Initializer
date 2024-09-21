@@ -53,8 +53,8 @@ const Initializer = ({data}) => {
                 productFootwearURLs: [],
                 productAccessoriesURLs: [],
                 productCoatsAndJacketsURLs: []   
-            }
-            
+            },
+            affiliateLink: []
 
         }
 
@@ -133,22 +133,27 @@ const Initializer = ({data}) => {
         //Fetch URLs and product descriptions from csv file and add to separate category arrays
         for(let i = 0; i < data.length; i++){
             if(data[i]["ProductType"] === "footwear"){
-                webpForFootwear.push(`https://${data[i]["ImageURL"]}`)
+                webpForFootwear.push(`${data[i]["ImageURL"]}`)
                 fetchedImageData.base64DTO.imageData.footwearCaptions.push(`${data[i]["Name"]}`)
-                fetchedImageData.base64DTO.imageData.productFootwearURLs.push(convertUrl(data[i]["ProductURL"]))
+                fetchedImageData.base64DTO.imageData.productFootwearURLs.push(`${data[i]["ProductURL"]}`)
+                setFetchedImageData(fetchedImageData.base64DTO.affiliateLink.push(`${data[i]["AffiliateLink"]}`))
             } else if(data[i]["ProductType"] === "accessories"){
-                webpForAccessories.push(`https://${data[i]["ImageURL"]}`);
+                webpForAccessories.push(`${data[i]["ImageURL"]}`);
                 fetchedImageData.base64DTO.imageData.accessoriesCaptions.push(`${data[i]["Name"]}`)
-                fetchedImageData.base64DTO.imageData.productAccessoriesURLs.push(convertUrl(data[i]["ProductURL"]))
+                fetchedImageData.base64DTO.imageData.productAccessoriesURLs.push(`${data[i]["ProductURL"]}`)
+                setFetchedImageData(fetchedImageData.base64DTO.affiliateLink.push(`${data[i]["AffiliateLink"]}`))
+                //console.log(data[i]["AffiliateLink"])
+                //console.log(`${data[i]["AffiliateLink"]}`)
                 //longUrl = convertUrl("https://www.asos.com/asos-design/asos-design-wide-chino-shorts-in-shorter-length-in-tan/prd/204458642?ctaref=featured+product&featureref1=featured+product&#colourWayId-204458644")//longUrl = data[i]["ProductURL"]
                 //console.log(longUrl)
                 //shortenUrlWithTinyUrl();
                 //console.log(shortUrl)
                 //fetchedImageData.base64DTO.imageData.productAccessoriesURLs.push(longUrl)
             } else if(data[i]["ProductType"] === "coatsandjackets"){
-                webpForCoatsandjackets.push(`https://${data[i]["ImageURL"]}`)
+                webpForCoatsandjackets.push(`${data[i]["ImageURL"]}`)
                 fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions.push(`${data[i]["Name"]}`)
-                fetchedImageData.base64DTO.imageData.productCoatsAndJacketsURLs.push(convertUrl(data[i]["ProductURL"]))
+                fetchedImageData.base64DTO.imageData.productCoatsAndJacketsURLs.push(`${data[i]["ProductURL"]}`)
+                setFetchedImageData(fetchedImageData.base64DTO.affiliateLink.push(`${data[i]["AffiliateLink"]}`))
             } else {
                 console.log(`${data[i]["ID"]} was not assigned a product type.`)
             }
@@ -210,7 +215,7 @@ const Initializer = ({data}) => {
         fetchedImageData.base64DTO.imageData.accessoriesURLs = blob2
         fetchedImageData.base64DTO.imageData.coatsandjacketsURLs = blob3
 
-        console.log(fetchedImageData)
+        console.log(fetchedImageData.base64DTO.affiliateLink)
 
         //Function to convert blobs to base64 using FileReader
         const blobsToBase64 = async (blobs) => {
@@ -260,7 +265,7 @@ const Initializer = ({data}) => {
 
     }
 
-    //const persistURLs = `http://localhost:9100/imagehost/persistimagedata` 
+    //const persistURLs = `http://localhost:9200/imagehost/persistimagedata` 
     //const persistURLs = `https://image-host-je09.onrender.com/imagehost/persistimagedata`
     const persistURLs = `https://kingmakerimageserver.onrender.com/imagehost/persistimagedata`
 
@@ -326,7 +331,8 @@ const Initializer = ({data}) => {
                 coatsandjacketsCaptions: fetchedImageData.base64DTO.imageData.coatsandjacketsCaptions,
                 productFootwearURLs: fetchedImageData.base64DTO.imageData.productFootwearURLs,
                 productAccessoriesURLs: fetchedImageData.base64DTO.imageData.productAccessoriesURLs,
-                productCoatsAndJacketsURLs: fetchedImageData.base64DTO.imageData.productCoatsAndJacketsURLs
+                productCoatsAndJacketsURLs: fetchedImageData.base64DTO.imageData.productCoatsAndJacketsURLs,
+                affiliateLinks: fetchedImageData.base64DTO.affiliateLink
 
             }
 
@@ -336,10 +342,10 @@ const Initializer = ({data}) => {
             const response = await fetch(persistURLs, {
 
                 method: 'POST',
+                //mode: 'no-cors', 
                 headers: {
                     'Access-Control-Allow-Origin': 'http://localhost:3000',
-                    'Content-Type': 'application/json',
-    
+                    'Content-Type': 'application/json'
                 },
                 
                 body: JSON.stringify(collectionOfImagesAndEventData)
@@ -391,7 +397,7 @@ const Initializer = ({data}) => {
 
                 method: 'GET',
                 headers: {
-                    'Access-Control-Allow-Origin': 'http://localhost:3000'
+                    'Access-Control-Allow-Origin': 'http://localhost:3000', 'https://scraper-initializer.onrender.com'
                 }
 
             });
@@ -435,7 +441,7 @@ const Initializer = ({data}) => {
 
                 method: 'GET',
                 headers: {
-                    'Access-Control-Allow-Origin': 'http://localhost:3000'
+                    'Access-Control-Allow-Origin': 'http://localhost:3000', 'https://scraper-initializer.onrender.com'
                 }
 
             });
@@ -458,7 +464,7 @@ const Initializer = ({data}) => {
     }
 
     //const triggerURL = `http://localhost:9100/imagehost/selfservice`
-    const triggerURL = `https://kingmakerimageserver.onrender.com/imagehost/receiveorderedimages`
+    const triggerURL = `https://kingmakercontaineridserver.onrender.com/imagehost/receiveorderedimages`
 
     // Arrays to store timeout and interval IDs
     let timeoutIds = [];
@@ -524,7 +530,7 @@ const Initializer = ({data}) => {
             const response = await fetch(triggerURL, {
                 method: 'POST',
                 headers: {
-                    'Access-Control-Allow-Origin': 'http://localhost:3000' // This header is not necessary in the request
+                    'Access-Control-Allow-Origin': 'http://localhost:3000', 'https://scraper-initializer.onrender.com' // This header is not necessary in the request
                 },
                 body: null
             });

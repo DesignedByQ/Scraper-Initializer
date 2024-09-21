@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Papa from 'papaparse';
-import Data from '../files/Products.csv'
+import Data from '../files/AmazonProducts.csv'
 import Initializer from './Initializer';
 
 const Scraper = () => {
@@ -109,8 +109,6 @@ const Scraper = () => {
         fetchData();
     }, []);
 
-    
-
     return(
         <div>
 
@@ -127,6 +125,7 @@ const Scraper = () => {
                         <th>EventID</th>
                         <th>Supplier</th>
                         <th>ProductURL</th>
+                        <th>AffiliateLink</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -141,6 +140,7 @@ const Scraper = () => {
                             <td>{row.EventID}</td>
                             <td>{row.Supplier}</td>
                             <td>{row.ProductURL}</td>
+                            <td>{row.AffiliateLink}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -10,7 +10,7 @@ const TableComponent = ({ data }) => {
       setIsLoading(true)
       setIsError(false)
 
-      const deleteEntry = `https://image-host-je09.onrender.com/imagehost/removeitem/${itemID}`
+      const deleteEntry = `https://image-host-je09.onrender.com/imagehost/removeitem/${itemID}` //need to update this
 
       try {
 
@@ -51,6 +51,7 @@ const TableComponent = ({ data }) => {
             <th style={styles.header}>Footwear</th>
             <th style={styles.header}>Accessories</th>
             <th style={styles.header}>Coats & Jackets</th>
+            <th style={styles.header}>Affiliate Link</th>
           </tr>
         </thead>
         <tbody>
@@ -66,6 +67,7 @@ const TableComponent = ({ data }) => {
               <td style={styles.cell}>{item.footwear64s && (<img src={`data:image/jpeg;base64,${item.footwear64s}`} alt={`N/A`} style={{ width: '200%' }}/>)}</td>
               <td style={styles.cell}>{item.accessories64s && (<img src={`data:image/jpeg;base64,${item.accessories64s}`} alt={`N/A`} style={{ width: '200%' }}/>)}</td>
               <td style={styles.cell}>{item.coatsandjackets64s && (<img src={`data:image/jpeg;base64,${item.coatsandjackets64s}`} alt={`N/A`} style={{ width: '200%' }}/>)}</td>
+              <td style={styles.cell}>{item.affiliateLink}</td>
             </tr>
           ))}
         </tbody>
