@@ -530,7 +530,7 @@ const Initializer = ({data}) => {
             const response = await fetch(triggerURL, {
                 method: 'POST',
                 headers: {
-                    'Access-Control-Allow-Origin': 'http://localhost:3000', 'https://scraper-initializer.onrender.com' // This header is not necessary in the request
+                    'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.onrender.com'] // This header is not necessary in the request
                 },
                 body: null
             });
