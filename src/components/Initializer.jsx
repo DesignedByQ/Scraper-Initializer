@@ -344,7 +344,7 @@ const Initializer = ({data}) => {
                 method: 'POST',
                 //mode: 'no-cors', 
                 headers: {
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.onrender.com'],
                     'Content-Type': 'application/json'
                 },
                 
@@ -397,7 +397,7 @@ const Initializer = ({data}) => {
 
                 method: 'GET',
                 headers: {
-                    'Access-Control-Allow-Origin': 'http://localhost:3000', 'https://scraper-initializer.onrender.com'
+                    'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.onrender.com']
                 }
 
             });
@@ -441,7 +441,7 @@ const Initializer = ({data}) => {
 
                 method: 'GET',
                 headers: {
-                    'Access-Control-Allow-Origin': 'http://localhost:3000', 'https://scraper-initializer.onrender.com'
+                    'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.onrender.com']
                 }
 
             });
