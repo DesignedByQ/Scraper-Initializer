@@ -149,8 +149,10 @@ if all_items:
     unique_products = {}
     for product in filtered_products:
         # Add product to dictionary only if the product_id is not already in the dictionary
-        if product['product_id'] not in unique_products:
-            unique_products[product['product_id']] = product
+        #if product['product_id'] not in unique_products:
+        if product.product_id not in unique_products:
+
+            unique_products[product.product_id] = product
 
     # Extract the filtered products from the dictionary
     filtered_products_no_duplicates = list(unique_products.values())

@@ -267,7 +267,8 @@ const Initializer = ({data}) => {
 
     //const persistURLs = `http://localhost:9200/imagehost/persistimagedata` 
     //const persistURLs = `https://image-host-je09.onrender.com/imagehost/persistimagedata`
-    const persistURLs = `https://kingmakerimageserver.onrender.com/imagehost/persistimagedata`
+    //const persistURLs = `https://kingmakerimageserver.onrender.com/imagehost/persistimagedata`
+    const persistURLs = `https://server1kingmaker.netlify.app`
 
     //Only sends base64s not imageURLs
     const handleSubmit = async (event) => {
