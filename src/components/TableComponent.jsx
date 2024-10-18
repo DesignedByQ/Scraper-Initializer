@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 const TableComponent = ({ data }) => {
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [isError, setIsError] = useState(false)
+    const [setIsLoading] = useState(false)
+    const [setIsError] = useState(false)
 
     const eraseEntry = async (itemID) => {
 

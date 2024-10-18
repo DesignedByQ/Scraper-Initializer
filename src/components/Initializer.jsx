@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 //import { v4 as uuidv4 } from 'uuid';
 import TableComponent from "./TableComponent";
 
@@ -14,7 +14,7 @@ const Initializer = ({data}) => {
     const [isLoadingGetData, setIsLoadingGetData] = useState(false);
     const [isErrorGetData, setIsErrorGetData] = useState(false);
     // let shortUrl = "";
-    let [longUrl, setLongUrl] = useState('');
+    //let [longUrl, setLongUrl] = useState('');
 
     // const generateUUID = () => {
     //     return uuidv4()
@@ -61,18 +61,18 @@ const Initializer = ({data}) => {
     });
 
     // Function to convert the URL
-    const convertUrl = (originalUrl) => {
-        // Split the original URL by '/'
-        const parts = originalUrl.split('/');
+    // const convertUrl = (originalUrl) => {
+    //     // Split the original URL by '/'
+    //     const parts = originalUrl.split('/');
 
-        // Remove the first three elements ('asos-design', 'asos-design', 'asos-design-oversized-faux-leather-motocross-jacket-in-monochrome')
-        const newPath = parts.slice(1).join('/');
+    //     // Remove the first three elements ('asos-design', 'asos-design', 'asos-design-oversized-faux-leather-motocross-jacket-in-monochrome')
+    //     const newPath = parts.slice(1).join('/');
 
-        // Construct the new URL
-        const newUrl = `asos.com/${newPath}`;
+    //     // Construct the new URL
+    //     const newUrl = `asos.com/${newPath}`;
 
-        return newUrl;
-    }
+    //     return newUrl;
+    // }
 
     // const shortenUrlWithTinyUrl = async () => {
 
@@ -575,7 +575,7 @@ const Initializer = ({data}) => {
                 <div  style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'  }}>
                     {base64Images.map((base64, index) => (
                         <div key={index}>
-                            <img src={base64} alt={`Converted Image ${index + 1}`} style={{ width: '50px' }}/>
+                            <img src={base64} alt={`Converted code into visual ${index + 1}`} style={{ width: '50px' }}/>
                         </div>
                     ))}
                 </div>
@@ -589,7 +589,7 @@ const Initializer = ({data}) => {
                 <div  style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'  }}>
                     {allExistingBase64Images.map((base64String, index) => (
                         <div key={index} >
-                            <img src={`data:image/jpeg;base64,${base64String}`} alt={`Image ${index}`} style={{ width: '50px' }}/>
+                            <img src={`data:image/jpeg;base64,${base64String}`} alt={`Code visual ${index}`} style={{ width: '50px' }}/>
                         </div>
                     ))}
                 </div>
