@@ -343,10 +343,9 @@ const Initializer = ({data}) => {
             const response = await fetch(persistURLs, {
 
                 method: 'POST',
-                //mode: 'no-cors', 
+                credentials: 'include',
                 headers: {
-                    'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.netlify.app'],
-                    'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
                 },
                 
                 body: JSON.stringify(collectionOfImagesAndEventData)
