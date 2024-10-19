@@ -343,7 +343,7 @@ const Initializer = ({data}) => {
             const response = await fetch(persistURLs, {
 
                 method: 'POST',
-                //mode: 'no-cors', 
+                mode: 'no-cors', 
                 headers: {
                     'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.onrender.com'],
                     'Content-Type': 'application/json'
