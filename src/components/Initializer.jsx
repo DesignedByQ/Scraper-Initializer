@@ -268,7 +268,7 @@ const Initializer = ({data}) => {
     //const persistURLs = `http://localhost:9200/imagehost/persistimagedata` 
     //const persistURLs = `https://image-host-je09.onrender.com/imagehost/persistimagedata`
     //const persistURLs = `https://kingmakerimageserver.onrender.com/imagehost/persistimagedata`
-    const persistURLs = `https://server1kingmaker.netlify.app`
+    const persistURLs = `https://server1kingmaker.netlify.app/imagehost/persistimagedata`
 
     //Only sends base64s not imageURLs
     const handleSubmit = async (event) => {
@@ -343,9 +343,9 @@ const Initializer = ({data}) => {
             const response = await fetch(persistURLs, {
 
                 method: 'POST',
-                mode: 'no-cors', 
+                //mode: 'no-cors', 
                 headers: {
-                    'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.onrender.com'],
+                    'Access-Control-Allow-Origin': ['http://localhost:3000', 'https://scraper-initializer.netlify.app'],
                     'Content-Type': 'application/json'
                 },
                 
