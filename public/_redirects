@@ -1,2 +1,3 @@
+/api/imagehost/* https://server1kingmaker.netlify.app/imagehost/:splat 200
 /test-proxy/* https://httpbin.org/:splat 200
-/api/* https://server1kingmaker.netlify.app/:splat 200
+/api/test https://httpbin.org/post 200
