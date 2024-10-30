@@ -1,1 +1,2 @@
+/test-proxy/* https://httpbin.org/:splat 200
 /api/* https://server1kingmaker.netlify.app/:splat 200
