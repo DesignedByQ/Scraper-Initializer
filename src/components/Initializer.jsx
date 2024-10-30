@@ -268,7 +268,7 @@ const Initializer = ({data}) => {
     //const persistURLs = `http://localhost:9200/imagehost/persistimagedata` 
     //const persistURLs = `https://image-host-je09.onrender.com/imagehost/persistimagedata`
     //const persistURLs = `https://kingmakerimageserver.onrender.com/imagehost/persistimagedata`
-    const persistURLs = `https://server1kingmaker.netlify.app/imagehost/persistimagedata`
+    const persistURLs = `/api/imagehost/persistimagedata`
 
     //Only sends base64s not imageURLs
     const handleSubmit = async (event) => {
@@ -355,6 +355,7 @@ const Initializer = ({data}) => {
             if (!response.ok) {
               
               setIsError(true);
+              throw new Error(`HTTP error! status: ${response.status}`);
               
             } else {
 
@@ -368,6 +369,8 @@ const Initializer = ({data}) => {
 
             setIsError(true);
             console.log(error);
+            console.error('Error uploading image:', error);
+            throw error;
     
         }
     
