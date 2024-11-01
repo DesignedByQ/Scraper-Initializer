@@ -345,10 +345,10 @@ const Initializer = ({data}) => {
             const response = await fetch(persistURLs, {
 
                 method: 'POST',
-                credentials: 'include',
                 headers: {
                   'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 
                 body: JSON.stringify(collectionOfImagesAndEventData)
               
