@@ -51,3 +51,5 @@ const DiagnosticComponent = () => {
       </button>
     );
   };
+
+  export default DiagnosticComponent;

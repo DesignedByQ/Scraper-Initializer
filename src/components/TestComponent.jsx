@@ -43,3 +43,5 @@ const TestComponent = () => {
       </button>
     );
   };
+
+  export default TestComponent;
